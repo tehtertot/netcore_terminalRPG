@@ -1,0 +1,8 @@
+C:\Users\tehte\Desktop\DojoAssignments\netCore\human\bin\Debug\netcoreapp1.1\human.deps.json
+C:\Users\tehte\Desktop\DojoAssignments\netCore\human\bin\Debug\netcoreapp1.1\human.runtimeconfig.json
+C:\Users\tehte\Desktop\DojoAssignments\netCore\human\bin\Debug\netcoreapp1.1\human.runtimeconfig.dev.json
+C:\Users\tehte\Desktop\DojoAssignments\netCore\human\bin\Debug\netcoreapp1.1\human.dll
+C:\Users\tehte\Desktop\DojoAssignments\netCore\human\bin\Debug\netcoreapp1.1\human.pdb
+C:\Users\tehte\Desktop\DojoAssignments\netCore\human\obj\Debug\netcoreapp1.1\human.AssemblyInfo.cs
+C:\Users\tehte\Desktop\DojoAssignments\netCore\human\obj\Debug\netcoreapp1.1\human.dll
+C:\Users\tehte\Desktop\DojoAssignments\netCore\human\obj\Debug\netcoreapp1.1\human.pdb
