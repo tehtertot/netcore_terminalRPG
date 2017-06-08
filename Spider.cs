@@ -1,7 +1,8 @@
 namespace human
 {
     public class Spider : Enemy {
-        public Spider() : base("spider") {
+        public Spider(string p) : base("spider") {
+            play_name = p;
         }
 
         public void attack(object o) {

@@ -30,6 +30,7 @@ namespace human
                 Console.WriteLine("Failed attack");
             }
             else {
+                Console.WriteLine("Enemy being attacked by human");
                 enemy.health -= strength * 5;
             }
         }

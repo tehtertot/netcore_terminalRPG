@@ -16,6 +16,16 @@ namespace human
                 enemy.health = 0;
             }
         }
+        public new void attack(object o) {
+            Enemy enemy = o as Enemy;
+            if (enemy == null) {
+                Console.WriteLine("Failed attack");
+            }
+            else {
+                Console.WriteLine("Enemy being attacked by human");
+                enemy.health -= strength * 5;
+            }
+        }
         public void meditate() {
             health = 200;
         }

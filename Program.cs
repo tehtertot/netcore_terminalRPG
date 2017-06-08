@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace human
 {
@@ -12,125 +13,162 @@ namespace human
             Ninja nancy = new Ninja(Console.ReadLine());
             Console.WriteLine("Player 3: Enter your name:");
             Wizard wally = new Wizard(Console.ReadLine());
-            Human[] heroes = new Human[]{sam, nancy, wally};
-            Zombie zack = new Zombie();
-            Zombie zoe = new Zombie();
-            Spider sally = new Spider();
-            Enemy[] enemies = new Enemy[]{zack, zoe, sally};
-            string enemyStr = "[0] Zombie Zack, [1] Zombie Zoe, [2] Spider Sally";
+            List<Human> heroes = new List<Human>{sam, nancy, wally};
+            Zombie zack = new Zombie("Zack");
+            Zombie zoe = new Zombie("Zoe");
+            Spider sally = new Spider("Sally");
+            List<Enemy> enemies = new List<Enemy>{zack, zoe, sally};
+            
             bool inPlay = true;
             int turn = 0;
-            string winners;
 
             while (inPlay) {
                 //loop back to first player after 3rd player
-                if (turn >= heroes.Length) { turn = 0; }
-                Console.WriteLine("{0} {1}, your turn! What would you like to do?",heroes[turn].name, heroes[turn].player_name);
-                string attack;
-                string victim = "";
+                if (turn >= heroes.Count) { turn = 0; }
+                Console.WriteLine("{0} {1}, your turn! What would you like to do? (Your health: {2})",heroes[turn].name, heroes[turn].player_name, heroes[turn].health);
+                object[] attack = new object[2];
+                int victim = -1;
                 if (heroes[turn] is Samurai) {
-                    Samurai.get_options();
-                    attack = Console.ReadLine();
-                    if (attack == "a" || attack == "d") {
-                        victim = askForTarget(enemyStr);
+                    attack = attackEnemy("Samurai", enemies);
+                    if (attack[1] is int) {
+                        victim = (int)attack[1];
                     }
-                    if (attack == "a") {
-                        sam.attack(enemies[victim]);
-                    }
-                    else if (attack == "d") {
-                        sam.death_blow(enemies[victim]);
-                    }
-                    else if (attack == "m") {
-                        sam.meditate();
-                    }
-                    else {
-                        Console.WriteLine("Invalid attack. Attack failed.");
+                    if (attack[0] is string) {
+                        string action = (string)attack[0];
+                        if (action == "a") {
+                            sam.attack(enemies[victim]);
+                            Console.WriteLine($"You attacked {enemies[victim].play_name}!");
+                            printEnemyHealth(enemies[victim].health);
+                        }
+                        else if (action == "d") {
+                            sam.death_blow(enemies[victim]);
+                            if (enemies[0].health == 0) {
+                                Console.WriteLine($"You successfully performed death blow on {enemies[victim].play_name}! Enemy is down.");
+                            }
+                            else {
+                                Console.WriteLine($"You attempted death blow on {enemies[victim].play_name} but his health was too high. No effect.");
+                            }
+                            
+                        }
+                        else {
+                            sam.meditate();
+                            Console.WriteLine($"You meditated. Your health is now {heroes[turn].health}!");
+                        }
                     }
                 }
                 else if (heroes[turn] is Ninja) {
-                    Ninja.get_options();
-                    attack = Console.ReadLine();
-                    if (attack == "a" || attack == "s") {
-                        victim = askForTarget(enemyStr);
+                    attack = attackEnemy("Ninja", enemies);
+                    if (attack[1] is int) {
+                        victim = (int)attack[1];
                     }
-                    if (attack == "a") {
-                        nancy.attack(enemies[victim]);
-                    }
-                    else if (attack == "s") {
-                        nancy.steal(enemies[victim]);
-                    }
-                    else if (attack == "g") {
-                        nancy.get_away();
-                    }
-                    else {
-                        Console.WriteLine("Invalid attack. Attack failed.");
+                    if (attack[0] is string) {
+                        string action = (string)attack[0];
+                        if (action == "a") {
+                            nancy.attack(enemies[victim]);
+                            Console.WriteLine($"You attacked {enemies[victim].play_name}!");
+                            printEnemyHealth(enemies[victim].health);
+                        }
+                        else if (action == "s") {
+                            nancy.steal(enemies[victim]);
+                            Console.WriteLine($"You stole from {enemies[victim].play_name}! Your health is now {heroes[turn].health}.");
+                            printEnemyHealth(enemies[victim].health);
+                        }
+                        else {
+                            nancy.get_away();
+                            Console.WriteLine($"You got away and your health is now {heroes[turn].health}.");
+                        }
                     }
                 }
                 else if (heroes[turn] is Wizard) {
-                    Wizard.get_options();
-                    attack = Console.ReadLine();
-                    if (attack == "a" || attack == "f") {
-                        victim = askForTarget(enemyStr);
+                    attack = attackEnemy("Wizard", enemies);
+                    if (attack[1] is int) {
+                        victim = (int)attack[1];
                     }
-                    if (attack == "a") {
-                        wally.attack(enemies[victim]);
+                    if (attack[0] is string) {
+                        string action = (string)attack[0];
+                        if (action == "a") {
+                            wally.attack(enemies[victim]);
+                            Console.WriteLine($"You attacked {enemies[victim].play_name}!");
+                            printEnemyHealth(enemies[victim].health);
+                        }
+                        else if (action == "f") {
+                            wally.fireball(enemies[victim]);
+                            Console.WriteLine($"You fireballed {enemies[victim].play_name}!");
+                            printEnemyHealth(enemies[victim].health);
+                        }
+                        else {
+                            wally.heal();
+                            Console.WriteLine($"You healed. Your health is now {heroes[turn].health}.");
+                        }
                     }
-                    else if (attack == "f") {
-                        wally.fireball(enemies[victim]);
-                    }
-                    else if (attack == "h") {
-                        wally.heal();
-                    }
-                    else {
-                        Console.WriteLine("Invalid attack. Attack failed.");
+                }
+
+                if (Enemy != -1) {
+                    Enemy v = enemies[victim];
+                }
+                foreach (Enemy e in enemies) {
+                    if (e.health <= 0) {
+                        enemies.Remove(e);
                     }
                 }
                 //victim's turn to attack; can only attack if still alive
-                string enemyName = "";
-                    if (enemies[victim].health > 0){
-                        if (victim == 0) {
+                if (enemies.IndexOf(v) != -1){
+                    if (v.play_name == "Zack") {
                         zack.attack(heroes[turn]);
-                        enemyName = "Zombie Zack";
                     }
-                    else if (victim == 1) {
+                    else if (v.play_name == "Zoe") {
                         zoe.attack(heroes[turn]);
-                        enemyName = "Zombie Zoe";
                     }
-                    else if (victim == 2) {
+                    else if (v.play_name == "Sally") {
                         sally.attack(heroes[turn]);
-                        enemyName = "Spider Sally";
                     }
+                    Console.WriteLine($"Enemy retaliated! Your health is now {heroes[turn].health}");
                 }
                 
-                Console.WriteLine($"You attacked {enemyName} whose health is now {enemies[victim].health}.");
-                Console.WriteLine($"{enemyName} attacks you! Your health is now {heroes[turn].health}.");
+                if (heroes[turn].health <= 0) {
+                    Console.WriteLine($"{heroes[turn].player_name} died :(");
+                    heroes.Remove(heroes[turn]);
+                }
+                
+                // Console.WriteLine($"{enemyName} attacks you! Your health is now {heroes[turn].health}.");
                 //check each iteration for end of game
-
+                if (heroes.Count == 0) {
+                    inPlay = false;
+                    System.Console.WriteLine("Enemies win :(");
+                }
+                else if (enemies.Count == 0) {
+                    inPlay = false;
+                    System.Console.WriteLine("Allies win!!");
+                }
+                
                 turn++;
             //end turn
+            
             }
-
         }
-        static string askForTarget(string enemies) {
+        static void printEnemyHealth(int health) {
+            Console.WriteLine($"Enemy's health is now {health}.");
+        }
+        static int askForTarget(string enemies) {
             Console.WriteLine("Who do you want to attack? {0}", enemies);
-            string v = Console.ReadLine();
+            int v = Convert.ToInt16(Console.ReadLine());
             //validate string input
-            // if (v > 2 || v < 0) {
-            //     Console.WriteLine("Invalid entry. Try again.");
-            //     askForTarget(enemies);
-            // }
+            if (v < 0 || v > 2) {
+                Console.WriteLine("Invalid entry. Try again.");
+                askForTarget(enemies);
+            }
             return v;
         }
-        static string enemiesInPlay(Enemy[] enemies) {
+        static string enemiesInPlay(List<Enemy> enemies) {
             string enemiesInPlay = "";
+            int counter = 0;
             foreach (Enemy e in enemies) {
-                if (e.health > 0) {
-                    enemiesInPlay += "";
-                }
+                enemiesInPlay += $"[{counter}] - {e.play_name} -";
+                counter++;
             }
             return enemiesInPlay;
         }
-        static void attackEnemy(string type, Enemy[] enemies) {
+        static object[] attackEnemy(string type, List<Enemy> enemies) {
             if (type == "Samurai") {
                 Samurai.get_options();
             }
@@ -141,15 +179,19 @@ namespace human
                 Wizard.get_options();
             }
             string attack = Console.ReadLine();
-            int victim;
+            int victim = -1;
             if ( attack=="a" || (type=="Samurai" && attack=="d") || (type=="Ninja" && attack=="s") || (type=="Wizard" && attack=="f") ) {
                 victim = askForTarget(enemiesInPlay(enemies));
+            }
+            else if ((type=="Samurai" && attack=="m") || (type=="Ninja" && attack=="g") || (type=="Wizard" && attack=="h")) {
+                //valid responses
             }
             else {
                 Console.WriteLine("Invalid attack. Try again.");
                 attackEnemy(type, enemies);
             }
-
+            object[] result = new object[] {attack, victim};
+            return result;
         }
     }
 }

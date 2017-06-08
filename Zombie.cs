@@ -1,7 +1,8 @@
 namespace human
 {
     public class Zombie : Enemy {
-        public Zombie() : base("zombie") {
+        public Zombie(string p) : base("zombie") {
+            play_name = p;
             health = 200;
         }
 

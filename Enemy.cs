@@ -3,7 +3,7 @@ using System;
 namespace human
 {
     public class Enemy {
-        public string name;
+        public string name, play_name;
         public int strength { get; set; }
         public int health { get; set; }
 

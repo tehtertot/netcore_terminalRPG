@@ -7,6 +7,17 @@ namespace human
             dexterity = 175;
             player_name = p;
         }
+
+        public new void attack(object o) {
+            Enemy enemy = o as Enemy;
+            if (enemy == null) {
+                Console.WriteLine("Failed attack");
+            }
+            else {
+                Console.WriteLine("Enemy being attacked by human");
+                enemy.health -= strength * 5;
+            }
+        }
         public void steal(object attacked) {
             base.attack(attacked);
             health += 10;
